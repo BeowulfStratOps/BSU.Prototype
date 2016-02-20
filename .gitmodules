@@ -1,0 +1,3 @@
+[submodule "BSO.Sync"]
+	path = BSO.Sync
+	url = git@git.beowulfso.com:beowulf/BSO.Sync.git
