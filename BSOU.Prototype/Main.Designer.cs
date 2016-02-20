@@ -30,8 +30,8 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.SyncUrlBox = new System.Windows.Forms.TextBox();
+            this.LocalPathBox = new System.Windows.Forms.TextBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnSync = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -54,19 +54,19 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "ArmA Path";
             // 
-            // textBox1
+            // SyncUrlBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(75, 10);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(271, 20);
-            this.textBox1.TabIndex = 2;
+            this.SyncUrlBox.Location = new System.Drawing.Point(75, 10);
+            this.SyncUrlBox.Name = "SyncUrlBox";
+            this.SyncUrlBox.Size = new System.Drawing.Size(271, 20);
+            this.SyncUrlBox.TabIndex = 2;
             // 
-            // textBox2
+            // LocalPathBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(75, 36);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(271, 20);
-            this.textBox2.TabIndex = 3;
+            this.LocalPathBox.Location = new System.Drawing.Point(75, 36);
+            this.LocalPathBox.Name = "LocalPathBox";
+            this.LocalPathBox.Size = new System.Drawing.Size(271, 20);
+            this.LocalPathBox.TabIndex = 3;
             // 
             // btnLoad
             // 
@@ -87,19 +87,20 @@
             this.btnSync.TabIndex = 5;
             this.btnSync.Text = "Sync";
             this.btnSync.UseVisualStyleBackColor = true;
+            this.btnSync.Click += new System.EventHandler(this.btnSync_Click);
             // 
-            // Form1
+            // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(358, 139);
             this.Controls.Add(this.btnSync);
             this.Controls.Add(this.btnLoad);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.LocalPathBox);
+            this.Controls.Add(this.SyncUrlBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "Form1";
+            this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Beowulf Sync Prototype";
             this.ResumeLayout(false);
@@ -111,8 +112,8 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox SyncUrlBox;
+        private System.Windows.Forms.TextBox LocalPathBox;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnSync;
     }
