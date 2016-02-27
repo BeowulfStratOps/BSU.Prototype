@@ -52,6 +52,7 @@ namespace BSOU.Prototype
             Task t = Task.Factory.StartNew(() =>
             {
                 SetLoadButton(false);
+                statusStrip.Text = "Loading Server";
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
                 Program.LoadedServer = new Server();
                 Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
@@ -66,6 +67,7 @@ namespace BSOU.Prototype
                     sb.AppendFormat("\t {0} \n", m.ModName);
                 }
                 MessageBox.Show(sb.ToString());
+                statusStrip.Text = "Server Loaded";
                 SetLoadButton(true);
                 SetSyncButton(true);
             });
@@ -79,11 +81,13 @@ namespace BSOU.Prototype
             {
                 SetSyncButton(false);
                 Sw.Start();
+                statusStrip.Text = "Fetching changes";
                 Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
             }).ContinueWith(x =>
             {
                 Sw.Stop();
                 SetSyncButton(true);
+                statusStrip.Text = string.Format("Changes fetched in {0}", Sw.Elapsed.ToString());
                 MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
             });
         }
