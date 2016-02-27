@@ -10,40 +10,82 @@ using System.Windows.Forms;
 using BSO.Sync;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
 
 namespace BSOU.Prototype
 {
     public partial class Main : Form
     {
+        delegate void SetLoadButtonCallback(bool Status);
+        delegate void SetSyncButtonCallback(bool Status);
         public Main()
         {
             InitializeComponent();
         }
 
+        private void SetLoadButton(bool Status)
+        {
+            if (this.btnLoad.InvokeRequired)
+            {
+                SetLoadButtonCallback d = new SetLoadButtonCallback(SetLoadButton);
+                this.Invoke(d, new object[] { Status });
+            }
+            else
+            {
+                btnLoad.Enabled = Status;
+            }
+        }
+        private void SetSyncButton(bool Status)
+        {
+            if (this.btnSync.InvokeRequired)
+            {
+                SetSyncButtonCallback d = new SetSyncButtonCallback(SetSyncButton);
+                this.Invoke(d, new object[] { Status });
+            }
+            else
+            {
+                btnSync.Enabled = Status;
+            }
+        }
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            Uri SyncUri = new Uri(SyncUrlBox.Text);
-            Program.LoadedServer = new Server();
-            Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
-            Program.ServerLoadeded = true;
-            btnSync.Enabled = true;
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Remote Mods Fetched: ");
-            foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
+            Task t = Task.Factory.StartNew(() =>
             {
-                sb.AppendFormat("\t {0} \n", m.ModName);
-            }
-            MessageBox.Show(sb.ToString());
-        }
+                SetLoadButton(false);
+                Uri SyncUri = new Uri(SyncUrlBox.Text);
+                Program.LoadedServer = new Server();
+                Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
 
+            }).ContinueWith(x =>
+            {
+                Program.ServerLoadeded = true;
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Remote Mods Fetched: ");
+                foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
+                {
+                    sb.AppendFormat("\t {0} \n", m.ModName);
+                }
+                MessageBox.Show(sb.ToString());
+                SetLoadButton(true);
+                SetSyncButton(true);
+            });
+            
+        }
         private void btnSync_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("About to fetch mods! This may cause the program to appear to be frozen for a *long* time. This is WIP");
+            MessageBox.Show("About to fetch mods! This might take a long time.");
             Stopwatch Sw = new Stopwatch();
-            Sw.Start();
-            Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
-            Sw.Stop();
-            MessageBox.Show(string.Format("Fetched mods in {0}",Sw.Elapsed.ToString()));
+            Task t = Task.Factory.StartNew(() =>
+            {
+                SetSyncButton(false);
+                Sw.Start();
+                Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
+            }).ContinueWith(x =>
+            {
+                Sw.Stop();
+                SetSyncButton(true);
+                MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
+            });
         }
     }
 }
