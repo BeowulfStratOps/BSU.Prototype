@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BSO.Sync;
+using BSU.Sync;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;

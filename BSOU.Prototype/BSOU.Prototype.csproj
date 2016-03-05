@@ -88,10 +88,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BSO.Sync\BSO.Sync.csproj">
+    <ProjectReference Include="..\BSU.Sync\BSU.Sync.csproj">
       <Project>{9379c93a-a9ff-4653-8cac-d082e256f879}</Project>
       <Name>BSO.Sync</Name>
     </ProjectReference>
