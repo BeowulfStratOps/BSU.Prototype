@@ -11,11 +11,13 @@ using BSU.Sync;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using NLog;
 
 namespace BSOU.Prototype
 {
     public partial class Main : Form
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
         delegate void SetLoadButtonCallback(bool Status);
         delegate void SetSyncButtonCallback(bool Status);
         public Main()
