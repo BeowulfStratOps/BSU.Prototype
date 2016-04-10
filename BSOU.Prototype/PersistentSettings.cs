@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace BSOU.Prototype
+namespace BSU.Prototype
 {
     internal static class PersistentSettings
     {

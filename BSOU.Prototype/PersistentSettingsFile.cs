@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BSOU.Prototype
+namespace BSU.Prototype
 {
     [JsonObject("PersistentSettings")]
     public class PersistentSettingsFile

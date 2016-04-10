@@ -7,8 +7,8 @@
     <ProjectGuid>{575D0C39-EB0F-4245-AAA7-B1D9D8D464B1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BSOU.Prototype</RootNamespace>
-    <AssemblyName>BSOU.Prototype</AssemblyName>
+    <RootNamespace>BSU.Prototype</RootNamespace>
+    <AssemblyName>BSU.Prototype</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -81,6 +81,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Content Include="assets\icon_64.ico" />
     <Content Include="assets\icon_254.ico" />

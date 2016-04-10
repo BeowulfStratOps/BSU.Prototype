@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Threading;
 using NLog;
 
-namespace BSOU.Prototype
+namespace BSU.Prototype
 {
     public partial class Main : Form
     {

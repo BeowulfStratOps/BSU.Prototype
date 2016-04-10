@@ -1,4 +1,4 @@
-﻿namespace BSOU.Prototype
+﻿namespace BSU.Prototype
 {
     partial class Main
     {
