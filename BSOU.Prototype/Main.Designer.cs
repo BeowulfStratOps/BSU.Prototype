@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.SyncUrlBox = new System.Windows.Forms.TextBox();
@@ -36,6 +37,7 @@
             this.btnSync = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusStrip = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,15 +49,17 @@
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Sync URL";
+            this.toolTip1.SetToolTip(this.label1, "Server sync file, check the wiki");
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 39);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "ArmA Path";
+            this.label2.Text = "Mod Path";
+            this.toolTip1.SetToolTip(this.label2, "The place where you wish to install your mods.");
             // 
             // SyncUrlBox
             // 
@@ -139,6 +143,7 @@
         private System.Windows.Forms.Button btnSync;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusStrip;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
