@@ -67,6 +67,7 @@
             this.SyncUrlBox.Name = "SyncUrlBox";
             this.SyncUrlBox.Size = new System.Drawing.Size(271, 20);
             this.SyncUrlBox.TabIndex = 2;
+            this.SyncUrlBox.Leave += new System.EventHandler(this.SyncUrlBox_Leave);
             // 
             // LocalPathBox
             // 
@@ -74,6 +75,7 @@
             this.LocalPathBox.Name = "LocalPathBox";
             this.LocalPathBox.Size = new System.Drawing.Size(271, 20);
             this.LocalPathBox.TabIndex = 3;
+            this.LocalPathBox.Leave += new System.EventHandler(this.LocalPathBox_Leave);
             // 
             // btnLoad
             // 
@@ -126,6 +128,7 @@
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Beowulf Sync Prototype";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);

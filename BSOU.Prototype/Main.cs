@@ -20,11 +20,33 @@ namespace BSOU.Prototype
         private Logger logger = LogManager.GetCurrentClassLogger();
         delegate void SetLoadButtonCallback(bool Status);
         delegate void SetSyncButtonCallback(bool Status);
+        delegate void SetSyncUrlBoxCallBack(bool Status);
         public Main()
         {
             InitializeComponent();
         }
 
+        private void SetTextBoxes(bool Status)
+        {
+            if (this.SyncUrlBox.InvokeRequired)
+            {
+                SetSyncUrlBoxCallBack d = new SetSyncUrlBoxCallBack(SetTextBoxes);
+                this.Invoke(d, new object[] { Status });
+            }
+            else
+            {
+                SyncUrlBox.Enabled = Status;
+            }
+            if (this.LocalPathBox.InvokeRequired)
+            {
+                SetSyncUrlBoxCallBack d = new SetSyncUrlBoxCallBack(SetTextBoxes);
+                this.Invoke(d, new object[] { Status });
+            }
+            else
+            {
+                LocalPathBox.Enabled = Status;
+            }
+        }
         private void SetLoadButton(bool Status)
         {
             if (this.btnLoad.InvokeRequired)
@@ -54,7 +76,8 @@ namespace BSOU.Prototype
             Task t = Task.Factory.StartNew(() =>
             {
                 SetLoadButton(false);
-                statusStrip.Text = "Loading Server";
+                SetTextBoxes(false);
+                statusStrip.Text = "Loading Server (procesing your local mods, might be slow)";
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
                 Program.LoadedServer = new Server();
                 Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
@@ -81,21 +104,21 @@ namespace BSOU.Prototype
             Stopwatch Sw = new Stopwatch();
             Task t = Task.Factory.StartNew(() =>
             {
-            SetSyncButton(false);
-            Sw.Start();
-            statusStrip.Text = "Fetching changes";
-            Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
+                SetSyncButton(false);
+                Sw.Start();
+                statusStrip.Text = "Fetching changes";
+                Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
 
-            if (TeamSpeakPlugin.TeamSpeakInstalled())
-            {
-                logger.Info("TeamSpeak install detected at {0}", TeamSpeakPlugin.TeamSpeakPath());
-                DirectoryInfo LocalPath = Program.LoadedServer.GetLocalPath();
-                foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
+                if (TeamSpeakPlugin.TeamSpeakInstalled())
                 {
-                    DirectoryInfo modPath = new DirectoryInfo(Path.Combine(LocalPath.ToString(), m.ModName.ToString()));
-                    DirectoryInfo[] folders = modPath.GetDirectories();
-                    if (folders.Any(x => x.FullName.Equals(Path.Combine(modPath.FullName, "plugins"))))
+                    logger.Info("TeamSpeak install detected at {0}", TeamSpeakPlugin.TeamSpeakPath());
+                    DirectoryInfo LocalPath = Program.LoadedServer.GetLocalPath();
+                    foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
                     {
+                        DirectoryInfo modPath = new DirectoryInfo(Path.Combine(LocalPath.ToString(), m.ModName.ToString()));
+                        DirectoryInfo[] folders = modPath.GetDirectories();
+                        if (folders.Any(x => x.FullName.Equals(Path.Combine(modPath.FullName, "plugins"))))
+                        {
                             DirectoryInfo modPluginFolder = new DirectoryInfo(Path.Combine(modPath.FullName, "plugins"));
                             DirectoryInfo tsPluginFolder = new DirectoryInfo(Path.Combine(TeamSpeakPlugin.TeamSpeakPath(), "plugins"));
 
@@ -115,7 +138,7 @@ namespace BSOU.Prototype
                                     }
                                     catch (UnauthorizedAccessException ex)
                                     {
-                                        MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder", relativePath));
+                                        MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                         logger.Error("Failed to copy file", ex);
                                     }
                                 }
@@ -123,7 +146,7 @@ namespace BSOU.Prototype
                                 {
                                     // Check to make sure that the files are different and copy only if they are and **file is not in use**
                                     // TODO: Check if its in use, right now it will fail if TS is using the files.
-                                    if (!FileEquals(file,tsFilePath))
+                                    if (!FileEquals(file, tsFilePath))
                                     {
                                         try
                                         {
@@ -131,7 +154,7 @@ namespace BSOU.Prototype
                                         }
                                         catch (UnauthorizedAccessException ex)
                                         {
-                                            MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder", relativePath));
+                                            MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath),"Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
                                             logger.Error("Failed to copy file", ex);
                                         }
                                     }
@@ -141,13 +164,14 @@ namespace BSOU.Prototype
                         }
                     }
                 }
-
             }).ContinueWith(x =>
             {
                 Sw.Stop();
                 SetSyncButton(true);
+                SetTextBoxes(true);
                 statusStrip.Text = string.Format("Changes fetched in {0}", Sw.Elapsed.ToString());
                 MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
+
             });
         }
         private bool FileEquals(FileInfo A, FileInfo B)
@@ -183,6 +207,22 @@ namespace BSOU.Prototype
 
 
 
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            SyncUrlBox.Text = PersistentSettings.GetLastSyncUrl();
+            LocalPathBox.Text = PersistentSettings.GetLastModFolder();
+        }
+
+        private void SyncUrlBox_Leave(object sender, EventArgs e)
+        {
+            PersistentSettings.SetLastSyncUrl(SyncUrlBox.Text);
+        }
+
+        private void LocalPathBox_Leave(object sender, EventArgs e)
+        {
+            PersistentSettings.SetLastModFolder(LocalPathBox.Text);
         }
     }
 }
