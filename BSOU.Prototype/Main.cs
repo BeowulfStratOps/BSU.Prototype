@@ -224,5 +224,18 @@ namespace BSU.Prototype
         {
             PersistentSettings.SetLastModFolder(LocalPathBox.Text);
         }
+
+        private void btnDirectorySelect_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (LocalPathBox.Text != "")
+            {
+                fbd.SelectedPath = LocalPathBox.Text;
+            }
+            fbd.Description = "Select where you wish to install the mods to";
+            fbd.ShowDialog();
+            LocalPathBox.Text = fbd.SelectedPath;
+            PersistentSettings.SetLastModFolder(LocalPathBox.Text);
+        }
     }
 }
