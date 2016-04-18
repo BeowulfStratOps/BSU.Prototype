@@ -75,7 +75,6 @@ namespace BSU.Prototype
         /// <param name="str"></param>
         internal static void SetLastSyncUrl(string str)
         {
-            Console.WriteLine("SetLastSyncUrl");
             PersistentSettingsFile persistentFile;
             if (PersistentFileExists())
             {
