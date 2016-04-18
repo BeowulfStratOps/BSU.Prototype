@@ -49,19 +49,20 @@ namespace BSU.Prototype
         /// <param name="str"></param>
         internal static void SetLastModFolder(string str)
         {
+            
             PersistentSettingsFile persistentFile;
             if (PersistentFileExists())
             {
                 string json = File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json"));
                 persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(json);
+                if (persistentFile.ModPath == str)
+                {
+                    return;
+                }
             }
             else
             {
                 persistentFile = new PersistentSettingsFile(str, string.Empty);
-            }
-            if (persistentFile.ModPath == str)
-            {
-                return;
             }
             persistentFile.ModPath = str;
             File.WriteAllText(Path.Combine(DataFolder.FullName, "data.json"),JsonConvert.SerializeObject(persistentFile));
@@ -74,19 +75,20 @@ namespace BSU.Prototype
         /// <param name="str"></param>
         internal static void SetLastSyncUrl(string str)
         {
+            Console.WriteLine("SetLastSyncUrl");
             PersistentSettingsFile persistentFile;
             if (PersistentFileExists())
             {
                 string json = File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json"));
                 persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(json);
+                if (persistentFile.SyncUrl == str)
+                {
+                    return;
+                }
             }
             else
             {
                 persistentFile = new PersistentSettingsFile(string.Empty, str);
-            }
-            if (persistentFile.SyncUrl == str)
-            {
-                return;
             }
             persistentFile.SyncUrl = str;
             File.WriteAllText(Path.Combine(DataFolder.FullName, "data.json"), JsonConvert.SerializeObject(persistentFile));
