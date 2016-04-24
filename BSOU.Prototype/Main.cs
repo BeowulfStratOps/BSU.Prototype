@@ -24,6 +24,8 @@ namespace BSU.Prototype
         public Main()
         {
             InitializeComponent();
+            this.MaximizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
 
         private void SetTextBoxes(bool Status)
