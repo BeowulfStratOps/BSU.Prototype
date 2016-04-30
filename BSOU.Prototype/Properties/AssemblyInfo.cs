@@ -5,11 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BSOU.Prototype")]
+[assembly: AssemblyTitle("BSU.Prototype")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BSOU.Prototype")]
+[assembly: AssemblyProduct("BSU.Prototype")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,6 +30,17 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
+
+// These are set by appveyor when being built, so are kinda irrelevent. 
+
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+[assembly: AssemblyInformationalVersion("INTERNAL-DEV")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#else
+ [assembly: AssemblyConfiguration("Release")]
+#endif
