@@ -26,6 +26,7 @@ namespace BSU.Prototype
             InitializeComponent();
             this.MaximizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            logger.Info(string.Format("Version: {0}", Application.ProductVersion));
         }
 
         private void SetTextBoxes(bool Status)
