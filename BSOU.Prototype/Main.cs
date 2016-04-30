@@ -115,28 +115,41 @@ namespace BSU.Prototype
                 if (TeamSpeakPlugin.TeamSpeakInstalled())
                 {
                     logger.Info("TeamSpeak install detected at {0}", TeamSpeakPlugin.TeamSpeakPath());
+
                     DirectoryInfo LocalPath = Program.LoadedServer.GetLocalPath();
-                    foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
+                    var TeamSpeakPlugins = TeamSpeakPlugin.GetModFoldersWithPlugins(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath().ToString());
+                    foreach (ModFolder m in TeamSpeakPlugins)
                     {
                         DirectoryInfo modPath = new DirectoryInfo(Path.Combine(LocalPath.ToString(), m.ModName.ToString()));
-                        DirectoryInfo[] folders = modPath.GetDirectories();
-                        if (folders.Any(x => x.FullName.Equals(Path.Combine(modPath.FullName, "plugins"))))
+                        DirectoryInfo modPluginFolder = new DirectoryInfo(Path.Combine(modPath.FullName, "plugins"));
+                        DirectoryInfo tsPluginFolder = new DirectoryInfo(Path.Combine(TeamSpeakPlugin.TeamSpeakPath(), "plugins"));
+                        foreach (var file in modPluginFolder.GetFiles("*", SearchOption.AllDirectories))
                         {
-                            DirectoryInfo modPluginFolder = new DirectoryInfo(Path.Combine(modPath.FullName, "plugins"));
-                            DirectoryInfo tsPluginFolder = new DirectoryInfo(Path.Combine(TeamSpeakPlugin.TeamSpeakPath(), "plugins"));
-
-                            logger.Trace("Plugins exists inside of {0}", modPath);
-                            foreach (var file in modPluginFolder.GetFiles("*", SearchOption.AllDirectories))
+                            string relativePath = file.FullName.Replace(modPluginFolder.ToString() + @"\", string.Empty);
+                            FileInfo tsFilePath = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
+                            if (!tsFilePath.Exists)
                             {
-                                string relativePath = file.FullName.Replace(modPluginFolder.ToString() + @"\", string.Empty);
-                                FileInfo tsFilePath = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
-                                if (!tsFilePath.Exists)
+                                // File does not exist in TS plugin folder, just copy it.
+                                try
                                 {
-                                    // File does not exist in TS plugin folder, just copy it.
+                                    FileInfo folder = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
+                                    Directory.CreateDirectory(folder.ToString().Replace(folder.Name, string.Empty));
+                                    File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
+                                }
+                                catch (UnauthorizedAccessException ex)
+                                {
+                                    MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    logger.Error("Failed to copy file", ex);
+                                }
+                            }
+                            else
+                            {
+                                // Check to make sure that the files are different and copy only if they are and **file is not in use**
+                                // TODO: Check if its in use, right now it will fail if TS is using the files.
+                                if (!FileEquals(file, tsFilePath))
+                                {
                                     try
                                     {
-                                        FileInfo folder = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
-                                        Directory.CreateDirectory(folder.ToString().Replace(folder.Name, string.Empty));
                                         File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
                                     }
                                     catch (UnauthorizedAccessException ex)
@@ -145,24 +158,6 @@ namespace BSU.Prototype
                                         logger.Error("Failed to copy file", ex);
                                     }
                                 }
-                                else
-                                {
-                                    // Check to make sure that the files are different and copy only if they are and **file is not in use**
-                                    // TODO: Check if its in use, right now it will fail if TS is using the files.
-                                    if (!FileEquals(file, tsFilePath))
-                                    {
-                                        try
-                                        {
-                                            File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
-                                        }
-                                        catch (UnauthorizedAccessException ex)
-                                        {
-                                            MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath),"Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                                            logger.Error("Failed to copy file", ex);
-                                        }
-                                    }
-                                }
-
                             }
                         }
                     }
