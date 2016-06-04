@@ -35,34 +35,19 @@ namespace BSU.Prototype
                 foreach (DirectoryInfo modPluginFolder in modPluginFolders)
                 {
                     DirectoryInfo tsPluginFolder = new DirectoryInfo(Path.Combine(TeamSpeakPlugin.TeamSpeakPath(), "plugins"));
-                    foreach (var file in modPluginFolder.GetFiles("*", SearchOption.AllDirectories))
+                    if (modPluginFolder.Exists)
                     {
-                        string relativePath = file.FullName.Replace(modPluginFolder.ToString() + @"\", string.Empty);
-                        FileInfo tsFilePath = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
-                        if (!tsFilePath.Exists)
+                        foreach (var file in modPluginFolder.GetFiles("*", SearchOption.AllDirectories))
                         {
-                            // File does not exist in TS plugin folder, just copy it.
-                            try
+                            string relativePath = file.FullName.Replace(modPluginFolder.ToString() + @"\", string.Empty);
+                            FileInfo tsFilePath = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
+                            if (!tsFilePath.Exists)
                             {
-                                FileInfo folder = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
-                                Directory.CreateDirectory(folder.ToString().Replace(folder.Name, string.Empty));
-                                File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
-                            }
-                            catch (UnauthorizedAccessException ex)
-                            {
-                                MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                logger.Error("Failed to copy file", ex);
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            // Check to make sure that the files are different and copy only if they are and **file is not in use**
-                            // TODO: Check if its in use, right now it will fail if TS is using the files.
-                            if (!FileEquals(file, tsFilePath))
-                            {
+                                // File does not exist in TS plugin folder, just copy it.
                                 try
                                 {
+                                    FileInfo folder = new FileInfo(Path.Combine(tsPluginFolder.ToString(), relativePath));
+                                    Directory.CreateDirectory(folder.ToString().Replace(folder.Name, string.Empty));
                                     File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
                                 }
                                 catch (UnauthorizedAccessException ex)
@@ -70,6 +55,24 @@ namespace BSU.Prototype
                                     MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     logger.Error("Failed to copy file", ex);
                                     return false;
+                                }
+                            }
+                            else
+                            {
+                                // Check to make sure that the files are different and copy only if they are and **file is not in use**
+                                // TODO: Check if its in use, right now it will fail if TS is using the files.
+                                if (!FileEquals(file, tsFilePath))
+                                {
+                                    try
+                                    {
+                                        File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
+                                    }
+                                    catch (UnauthorizedAccessException ex)
+                                    {
+                                        MessageBox.Show(string.Format("Failed to copy {0} to TS plugin folder. You may want to copy the files manually. (Please report this issue)", relativePath), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        logger.Error("Failed to copy file", ex);
+                                        return false;
+                                    }
                                 }
                             }
                         }
