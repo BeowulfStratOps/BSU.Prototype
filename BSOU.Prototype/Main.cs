@@ -131,6 +131,7 @@ namespace BSU.Prototype
         }
         private void Main_Load(object sender, EventArgs e)
         {
+            this.Text = String.Format("Beowulf Sync Prototype {0}", Application.ProductVersion);
             SyncUrlBox.Text = PersistentSettings.GetLastSyncUrl();
             LocalPathBox.Text = PersistentSettings.GetLastModFolder();
         }
