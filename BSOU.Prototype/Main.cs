@@ -76,6 +76,7 @@ namespace BSU.Prototype
         }
         private void btnLoad_Click(object sender, EventArgs e)
         {
+            bool loaded = false;
             Task t = Task.Factory.StartNew(() =>
             {
                 SetLoadButton(false);
@@ -83,21 +84,30 @@ namespace BSU.Prototype
                 statusStrip.Text = "Loading Server (procesing your local mods, might be slow)";
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
                 Program.LoadedServer = new Server();
-                Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
+                loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
 
             }).ContinueWith(x =>
             {
-                Program.ServerLoadeded = true;
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("Remote Mods Fetched: ");
-                foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
+                if (loaded)
                 {
-                    sb.AppendFormat("\t {0} \n", m.ModName);
+                    Program.ServerLoadeded = true;
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("Remote Mods Fetched: ");
+                    foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
+                    {
+                        sb.AppendFormat("\t {0} \n", m.ModName);
+                    }
+                    MessageBox.Show(sb.ToString());
+                    statusStrip.Text = "Server Loaded";
+                    SetLoadButton(true);
+                    SetSyncButton(true);
                 }
-                MessageBox.Show(sb.ToString());
-                statusStrip.Text = "Server Loaded";
-                SetLoadButton(true);
-                SetSyncButton(true);
+                else
+                {
+                    MessageBox.Show("Failed to load server file. Check the patha and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    SetLoadButton(true);
+                    SetTextBoxes(true);
+                }
             });
             
         }
