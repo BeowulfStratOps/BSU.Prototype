@@ -12,6 +12,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 using NLog;
+using BSO.Sync;
+using Newtonsoft.Json.Linq;
 
 namespace BSU.Prototype
 {
@@ -21,6 +23,9 @@ namespace BSU.Prototype
         delegate void SetLoadButtonCallback(bool Status);
         delegate void SetSyncButtonCallback(bool Status);
         delegate void SetSyncUrlBoxCallBack(bool Status);
+
+        public int ProgessValue { get; set; }
+
         public Main()
         {
             InitializeComponent();
@@ -49,6 +54,15 @@ namespace BSU.Prototype
             {
                 LocalPathBox.Enabled = Status;
             }
+            if (this.btnDirectorySelect.InvokeRequired)
+            {
+                SetSyncUrlBoxCallBack d = new SetSyncUrlBoxCallBack(SetTextBoxes);
+                this.Invoke(d, new object[] { Status });
+            }
+            else
+            {
+                btnDirectorySelect.Enabled = Status;
+            }
         }
         private void SetLoadButton(bool Status)
         {
@@ -74,16 +88,50 @@ namespace BSU.Prototype
                 btnSync.Enabled = Status;
             }
         }
+
+        private void HandleProgressUpdateEvent(object sender, ProgressUpdateEventArguments arg)
+        {
+
+            if (this.appProgress.InvokeRequired)
+            {
+                Server.ProgressUpdateEventHandler d = new Server.ProgressUpdateEventHandler(HandleProgressUpdateEvent);
+                this.Invoke(d, new object[] { sender, arg });
+            }
+            else
+            {
+                this.appProgress.Value = arg.ProgressValue;
+            }
+        }
+
+        private void HandleFetchProcessUpdateEvent(object sender, ProgressUpdateEventArguments arg)
+        {
+            if (this.appProgress.InvokeRequired)
+            {
+                Server.FetchProgressUpdateEventHandler d = new Server.FetchProgressUpdateEventHandler(HandleFetchProcessUpdateEvent);
+                this.Invoke(d, new object[] { sender, arg });
+            }
+            else
+            {
+                this.statusStrip.Text = $"Fetching changes ({arg.ProgressValue}/{arg.MaximumValue})...";
+            }
+        }
+
         private void btnLoad_Click(object sender, EventArgs e)
         {
             bool loaded = false;
             Task t = Task.Factory.StartNew(() =>
             {
                 SetLoadButton(false);
+                SetSyncButton(false);
                 SetTextBoxes(false);
                 statusStrip.Text = "Loading Server (procesing your local mods, might be slow)";
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
-                Program.LoadedServer = new Server();
+
+                Server server = new Server();
+                server.progressUpdateEvent += new Server.ProgressUpdateEventHandler(HandleProgressUpdateEvent);
+                server.fetchProgessUpdateEvent += new Server.FetchProgressUpdateEventHandler(HandleFetchProcessUpdateEvent);
+
+                Program.LoadedServer = server;
                 loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
 
             }).ContinueWith(x =>
@@ -113,10 +161,15 @@ namespace BSU.Prototype
         }
         private void btnSync_Click(object sender, EventArgs e)
         {
+
+            HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
+
             MessageBox.Show("About to fetch mods! This might take a long time.");
             Stopwatch Sw = new Stopwatch();
             Task t = Task.Factory.StartNew(() =>
             {
+                SetTextBoxes(false);
+                SetLoadButton(false);
                 SetSyncButton(false);
                 Sw.Start();
                 statusStrip.Text = "Fetching changes";
@@ -134,9 +187,10 @@ namespace BSU.Prototype
                 Sw.Stop();
                 SetSyncButton(true);
                 SetTextBoxes(true);
+                SetLoadButton(true);
+                HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 100 });
                 statusStrip.Text = string.Format("Changes fetched in {0}", Sw.Elapsed.ToString());
                 MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
-
             });
         }
         private void Main_Load(object sender, EventArgs e)

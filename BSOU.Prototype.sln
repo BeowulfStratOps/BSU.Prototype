@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSOU.Prototype", "BSOU.Prototype\BSOU.Prototype.csproj", "{575D0C39-EB0F-4245-AAA7-B1D9D8D464B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSU.Sync", "BSU.Sync\BSU.Sync.csproj", "{9379C93A-A9FF-4653-8CAC-D082E256F879}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BSU.Sync", "..\BSU.Sync\BSU.Sync.csproj", "{9379C93A-A9FF-4653-8CAC-D082E256F879}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

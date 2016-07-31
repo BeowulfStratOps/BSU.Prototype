@@ -40,6 +40,7 @@
             this.statusStrip = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnDirectorySelect = new System.Windows.Forms.Button();
+            this.appProgress = new System.Windows.Forms.ProgressBar();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -105,7 +106,7 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStrip});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 136);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 168);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(350, 22);
             this.statusStrip1.SizingGrip = false;
@@ -128,11 +129,20 @@
             this.btnDirectorySelect.UseVisualStyleBackColor = true;
             this.btnDirectorySelect.Click += new System.EventHandler(this.btnDirectorySelect_Click);
             // 
+            // appProgress
+            // 
+            this.appProgress.Location = new System.Drawing.Point(12, 139);
+            this.appProgress.MarqueeAnimationSpeed = 1;
+            this.appProgress.Name = "appProgress";
+            this.appProgress.Size = new System.Drawing.Size(333, 23);
+            this.appProgress.TabIndex = 7;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(350, 158);
+            this.ClientSize = new System.Drawing.Size(350, 190);
+            this.Controls.Add(this.appProgress);
             this.Controls.Add(this.btnDirectorySelect);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnSync);
@@ -167,6 +177,7 @@
         private System.Windows.Forms.ToolStripStatusLabel statusStrip;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnDirectorySelect;
+        private System.Windows.Forms.ProgressBar appProgress;
     }
 }
 
