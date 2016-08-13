@@ -152,7 +152,7 @@ namespace BSU.Prototype
                 }
                 else
                 {
-                    MessageBox.Show("Failed to load server file. Check the patha and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Failed to load server file. Check the URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     SetLoadButton(true);
                     SetTextBoxes(true);
                 }
