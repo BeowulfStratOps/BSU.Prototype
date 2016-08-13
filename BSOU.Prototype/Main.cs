@@ -181,6 +181,13 @@ namespace BSU.Prototype
                     var TeamSpeakPlugins = TeamSpeakPlugin.GetModFoldersWithPlugins(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath().ToString());
                     TeamSpeak.FindAndCopyTeamSpeakPlugin(TeamSpeakPlugins, Program.LoadedServer.GetLocalPath(), new DirectoryInfo(TeamSpeakPlugin.TeamSpeakPath()));
                 }
+                // Do the same with user configs
+                if (ArmA.IsInstalled())
+                {
+                    // Just in case ArmA isn't installed (why someone is installing mods is another issue..), to prevent any errors
+                    //var UserConfigs = UserConfig.GetModFoldersWithUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath().ToString());
+                    UserConfig.CopyUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
+                }
 
             }).ContinueWith(x =>
             {
