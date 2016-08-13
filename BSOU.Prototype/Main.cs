@@ -187,6 +187,8 @@ namespace BSU.Prototype
                     // Just in case ArmA isn't installed (why someone is installing mods is another issue..), to prevent any errors
                     //var UserConfigs = UserConfig.GetModFoldersWithUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath().ToString());
                     UserConfig.CopyUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
+
+                    Bikey.CopyBiKeys(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
                 }
 
             }).ContinueWith(x =>
