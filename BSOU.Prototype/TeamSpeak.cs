@@ -65,7 +65,7 @@ namespace BSU.Prototype
                                 {
                                     try
                                     {
-                                        File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath));
+                                        File.Copy(file.FullName, Path.Combine(tsPluginFolder.ToString(), relativePath),true);
                                     }
                                     catch (UnauthorizedAccessException ex)
                                     {
