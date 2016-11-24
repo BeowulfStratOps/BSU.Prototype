@@ -26,6 +26,8 @@ namespace BSU.Prototype
 
         public int ProgessValue { get; set; }
 
+        private int FailedChanges = 0;
+
         public Main()
         {
             InitializeComponent();
@@ -116,7 +118,8 @@ namespace BSU.Prototype
             }
         }
 
-        private void btnLoad_Click(object sender, EventArgs e)
+
+        private void load()
         {
             bool loaded = false;
             Task t = Task.Factory.StartNew(() =>
@@ -157,11 +160,15 @@ namespace BSU.Prototype
                     SetTextBoxes(true);
                 }
             });
-            
         }
-        private void btnSync_Click(object sender, EventArgs e)
+        private void btnLoad_Click(object sender, EventArgs e)
         {
+            load();
 
+        }
+
+        private void sync()
+        {
             HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
 
             MessageBox.Show("About to fetch mods! This might take a long time.");
@@ -173,7 +180,7 @@ namespace BSU.Prototype
                 SetSyncButton(false);
                 Sw.Start();
                 statusStrip.Text = "Fetching changes";
-                Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
+                FailedChanges = Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
 
                 if (TeamSpeakPlugin.TeamSpeakInstalled())
                 {
@@ -199,8 +206,27 @@ namespace BSU.Prototype
                 SetLoadButton(true);
                 HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 100 });
                 statusStrip.Text = string.Format("Changes fetched in {0}", Sw.Elapsed.ToString());
-                MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
+                if (FailedChanges > 0)
+                {
+                    if (
+                        MessageBox.Show(
+                            string.Format(
+                                "Failed to acquire {0} changes. Your mods are not up to date as a result. \r\nYou must re-sync to be up to date. Ensure you are connected to the internet.",
+                                FailedChanges), "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) ==
+                        DialogResult.Retry)
+                    {
+                        load();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
+                }
             });
+        }
+        private void btnSync_Click(object sender, EventArgs e)
+        {
+            sync();
         }
         private void Main_Load(object sender, EventArgs e)
         {
