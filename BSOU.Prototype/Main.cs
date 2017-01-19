@@ -122,6 +122,7 @@ namespace BSU.Prototype
         private void load()
         {
             bool loaded = false;
+            bool ioerror = false;
             Task t = Task.Factory.StartNew(() =>
             {
                 SetLoadButton(false);
@@ -135,7 +136,14 @@ namespace BSU.Prototype
                 server.fetchProgessUpdateEvent += new Server.FetchProgressUpdateEventHandler(HandleFetchProcessUpdateEvent);
 
                 Program.LoadedServer = server;
-                loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
+                try
+                {
+                    loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
+                }
+                catch (IOException)
+                {
+                    ioerror = true;
+                }
 
             }).ContinueWith(x =>
             {
@@ -153,11 +161,20 @@ namespace BSU.Prototype
                     SetLoadButton(true);
                     SetSyncButton(true);
                 }
-                else
+                else if (!ioerror)
                 {
                     MessageBox.Show("Failed to load server file. Check the URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     SetLoadButton(true);
                     SetTextBoxes(true);
+                    HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
+                    statusStrip.Text = "Failed to load due to bad URL";
+                } else if (ioerror)
+                {
+                    MessageBox.Show("Failed to hash local files. Check they are not in use and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    SetLoadButton(true);
+                    SetTextBoxes(true);
+                    HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
+                    statusStrip.Text = "Failed to load due to IO Error";
                 }
             });
         }
