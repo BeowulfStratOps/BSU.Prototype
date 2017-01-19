@@ -168,6 +168,7 @@ namespace BSU.Prototype
                     SetTextBoxes(true);
                     HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
                     statusStrip.Text = "Failed to load due to bad URL";
+                    logger.Error($"Failed to load config file {SyncUrlBox.Text}");
                 } else if (ioerror)
                 {
                     MessageBox.Show("Failed to hash local files. Check they are not in use and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -175,6 +176,7 @@ namespace BSU.Prototype
                     SetTextBoxes(true);
                     HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
                     statusStrip.Text = "Failed to load due to IO Error";
+                    logger.Error("Failed to load config file due to IO error (File in use?)");
                 }
             });
         }
