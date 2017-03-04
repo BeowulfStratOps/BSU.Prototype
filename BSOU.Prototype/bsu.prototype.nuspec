@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>BSU-Prototype</id>
+    <version>1.0.0</version>
+    <authors>Beowulf Strategic Operations</authors>
+    <projectUrl>http://u.beowulfso.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Beowulf Sync Util - Prototype</description>
+    <iconUrl>http://u.beowulfso.com/updates/icon_64.ico</iconUrl>
+  </metadata>
+  <files>
+    <file src="*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+  </files>
+</package>
+
