@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BSU.Sync;
+using Squirrel;
 
 namespace BSU.Prototype
 {
@@ -17,6 +18,13 @@ namespace BSU.Prototype
         [STAThread]
         static void Main()
         {
+            Task.Run(async () =>
+            {
+                using (var mgr = new UpdateManager($"http://u.beowulfso.com/updates/{Properties.Settings.Default.UpdateChannel}"))
+                {
+                    await mgr.UpdateApp();
+                }
+            }).GetAwaiter().GetResult();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());
