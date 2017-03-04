@@ -20,7 +20,7 @@ namespace BSU.Prototype
         {
             Task.Run(async () =>
             {
-                using (var mgr = new UpdateManager($"http://u.beowulfso.com/updates/{Properties.Settings.Default.UpdateChannel}"))
+                using (var mgr = new UpdateManager($"http://u.beowulfso.com/prototype/{Properties.Settings.Default.UpdateChannel}"))
                 {
                     await mgr.UpdateApp();
                 }
