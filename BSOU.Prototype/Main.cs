@@ -201,12 +201,15 @@ namespace BSU.Prototype
                 statusStrip.Text = "Fetching changes";
                 FailedChanges = Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
 
+                /*
+                No longer needed due to TS 3.1 
                 if (TeamSpeakPlugin.TeamSpeakInstalled())
                 {
                     logger.Info("TeamSpeak install detected at {0}", TeamSpeakPlugin.TeamSpeakPath());
                     var TeamSpeakPlugins = TeamSpeakPlugin.GetModFoldersWithPlugins(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath().ToString());
                     TeamSpeak.FindAndCopyTeamSpeakPlugin(TeamSpeakPlugins, Program.LoadedServer.GetLocalPath(), new DirectoryInfo(TeamSpeakPlugin.TeamSpeakPath()));
                 }
+                */
                 // Do the same with user configs
                 if (ArmA.IsInstalled())
                 {
