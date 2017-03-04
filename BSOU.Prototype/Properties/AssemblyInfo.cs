@@ -44,3 +44,5 @@ using System.Runtime.InteropServices;
 #else
  [assembly: AssemblyConfiguration("Release")]
 #endif
+
+[assembly: AssemblyMetadata("SquirrelAwareVersion", "1")]

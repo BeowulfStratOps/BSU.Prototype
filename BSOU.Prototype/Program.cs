@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BSU.Sync;
 using Squirrel;
+using System.IO;
 
 namespace BSU.Prototype
 {
@@ -18,13 +19,40 @@ namespace BSU.Prototype
         [STAThread]
         static void Main()
         {
-            Task.Run(async () =>
+            // Don't update it if we are running with the debugger attached
+            // TODO: Maybe change this to detect a command line argument instead 
+            if (!System.Diagnostics.Debugger.IsAttached)
             {
                 using (var mgr = new UpdateManager($"http://u.beowulfso.com/prototype/{Properties.Settings.Default.UpdateChannel}"))
                 {
-                    await mgr.UpdateApp();
+                    // Note, in most of these scenarios, the app exits after this method
+                    // completes!
+                    SquirrelAwareApp.HandleEvents(
+                      onInitialInstall: v => mgr.CreateShortcutForThisExe(),
+                      onAppUpdate: v => mgr.CreateShortcutForThisExe(),
+                      onAppUninstall: v => mgr.RemoveShortcutForThisExe());
+
+                    Task.Run(async () =>
+                    {
+                        var updates = await mgr.CheckForUpdate();
+                        if (updates.ReleasesToApply.Any())
+                        {
+                            var lastVersion = updates.ReleasesToApply.OrderBy(x => x.Version).Last();
+
+                            await mgr.DownloadReleases(updates.ReleasesToApply);
+                            await mgr.ApplyReleases(updates);
+
+                            string latestExe = $"\"{Path.Combine(await mgr.ApplyReleases(updates), "BSU.Prototype.exe")}\"";
+
+                            UpdateManager.RestartApp(latestExe);
+                        }
+
+                    }).GetAwaiter().GetResult();
+
                 }
-            }).GetAwaiter().GetResult();
+            }
+
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());
