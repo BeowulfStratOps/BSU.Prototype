@@ -8,7 +8,7 @@
     <projectUrl>http://u.beowulfso.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Beowulf Sync Util - Prototype</description>
-    <iconUrl>http://u.beowulfso.com/updates/icon_64.ico</iconUrl>
+    <iconUrl>http://u.beowulfso.com/prototype/icon_64.ico</iconUrl>
   </metadata>
   <files>
     <file src="*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
