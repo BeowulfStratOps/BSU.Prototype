@@ -30,9 +30,21 @@ namespace BSU.Prototype
                     // Note, in most of these scenarios, the app exits after this method
                     // completes!
                     SquirrelAwareApp.HandleEvents(
-                      onInitialInstall: v => mgr.CreateShortcutForThisExe(),
-                      onAppUpdate: v => mgr.CreateShortcutForThisExe(),
-                      onAppUninstall: v => mgr.RemoveShortcutForThisExe());
+                      onInitialInstall: v =>
+                      {
+                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.Desktop,false);
+                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.StartMenu, false);
+                      },
+                      onAppUpdate: v =>
+                      {
+                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.Desktop, false);
+                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.StartMenu, false);
+                      },
+                      onAppUninstall: v => 
+                      {
+                          mgr.RemoveShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.Desktop);
+                          mgr.RemoveShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.StartMenu);
+                      });
 
                     Task.Run(async () =>
                     {
