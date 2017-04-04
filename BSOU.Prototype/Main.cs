@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BSU.Sync;
 using System.IO;
 using System.Diagnostics;
-using System.Threading;
 using NLog;
-using BSO.Sync;
-using Newtonsoft.Json.Linq;
+
 
 namespace BSU.Prototype
 {
@@ -132,8 +125,8 @@ namespace BSU.Prototype
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
 
                 Server server = new Server();
-                server.progressUpdateEvent += new Server.ProgressUpdateEventHandler(HandleProgressUpdateEvent);
-                server.fetchProgessUpdateEvent += new Server.FetchProgressUpdateEventHandler(HandleFetchProcessUpdateEvent);
+                server.ProgressUpdateEvent += HandleProgressUpdateEvent;
+                server.FetchProgessUpdateEvent += HandleFetchProcessUpdateEvent;
 
                 Program.LoadedServer = server;
                 try
