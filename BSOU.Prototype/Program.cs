@@ -19,61 +19,86 @@ namespace BSU.Prototype
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             // Don't update it if we are running with the debugger attached
             // TODO: Maybe change this to detect a command line argument instead 
-            if (!System.Diagnostics.Debugger.IsAttached)
+            if (!SkipUpdateCheck(args))
             {
-                using (var mgr = new UpdateManager($"http://u.beowulfso.com/prototype/{Properties.Settings.Default.UpdateChannel}"))
+                using (var mgr = new UpdateManager(
+                    $"http://u.beowulfso.com/prototype/{Properties.Settings.Default.UpdateChannel}"))
                 {
                     // Note, in most of these scenarios, the app exits after this method
                     // completes!
                     SquirrelAwareApp.HandleEvents(
-                      onInitialInstall: v =>
-                      {
-                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.Desktop,false);
-                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.StartMenu, false);
-                      },
-                      onAppUpdate: v =>
-                      {
-                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.Desktop, false);
-                          mgr.CreateShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.StartMenu, false);
-                      },
-                      onAppUninstall: v => 
-                      {
-                          mgr.RemoveShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.Desktop);
-                          mgr.RemoveShortcutsForExecutable(Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location), ShortcutLocation.StartMenu);
-                      });
+                        onInitialInstall: v =>
+                        {
+                            mgr.CreateShortcutsForExecutable(
+                                Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                                ShortcutLocation.Desktop, false);
+                            mgr.CreateShortcutsForExecutable(
+                                Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                                ShortcutLocation.StartMenu, false);
+                        },
+                        onAppUpdate: v =>
+                        {
+                            mgr.CreateShortcutsForExecutable(
+                                Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                                ShortcutLocation.Desktop, false);
+                            mgr.CreateShortcutsForExecutable(
+                                Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                                ShortcutLocation.StartMenu, false);
+                        },
+                        onAppUninstall: v =>
+                        {
+                            mgr.RemoveShortcutsForExecutable(
+                                Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                                ShortcutLocation.Desktop);
+                            mgr.RemoveShortcutsForExecutable(
+                                Path.GetFileName(System.Reflection.Assembly.GetEntryAssembly().Location),
+                                ShortcutLocation.StartMenu);
+                        });
 
                     Task.Run(async () =>
-                    {
-                        var updates = await mgr.CheckForUpdate();
-                        if (updates.ReleasesToApply.Any())
                         {
-                            var lastVersion = updates.ReleasesToApply.OrderBy(x => x.Version).Last();
+                            var updates = await mgr.CheckForUpdate();
+                            if (updates.ReleasesToApply.Any())
+                            {
+                                var lastVersion = updates.ReleasesToApply.OrderBy(x => x.Version).Last();
 
-                            logger.Info($"Update available, applying version {lastVersion.Version}");
+                                logger.Info($"Update available, applying version {lastVersion.Version}");
 
-                            await mgr.DownloadReleases(updates.ReleasesToApply);
-                            await mgr.ApplyReleases(updates);
+                                await mgr.DownloadReleases(updates.ReleasesToApply);
+                                await mgr.ApplyReleases(updates);
 
-                            
-                            string latestExe = $"\"{Path.Combine(await mgr.ApplyReleases(updates), "BSU.Prototype.exe")}\"";
 
-                            logger.Info($"Update applied, restarting");
-                            UpdateManager.RestartApp(latestExe);
-                        }
+                                string latestExe =
+                                    $"\"{Path.Combine(await mgr.ApplyReleases(updates), "BSU.Prototype.exe")}\"";
 
-                    }).GetAwaiter().GetResult();
+                                logger.Info($"Update applied, restarting");
+                                UpdateManager.RestartApp(latestExe);
+                            }
+
+                        })
+                        .GetAwaiter()
+                        .GetResult();
 
                 }
+            }
+            else
+            {
+                logger.Info("Skipped update check (either due to argument or debugger attached)");
             }
 
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());
+        }
+
+        private static bool SkipUpdateCheck(string[] args)
+        {
+            return System.Diagnostics.Debugger.IsAttached || args.Any("noupdate".Contains);
         }
     }
 }
