@@ -49,8 +49,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BSU.Sync, Version=0.0.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\BSU.Sync.dll</HintPath>
+    <Reference Include="BSU.Sync, Version=0.0.50.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\BSU.Sync.dll</HintPath>
     </Reference>
     <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
       <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.dll</HintPath>
@@ -66,52 +66,52 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Beans, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Beans.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Beans.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Charsets, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Charsets.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Charsets.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Corba, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Corba.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Corba.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Core, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Core.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Management, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Management.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Management.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Media, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Media.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Media.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Misc, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Misc.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Misc.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Naming, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Naming.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Naming.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Remoting, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Remoting.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Remoting.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Security, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Security.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Security.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.SwingAWT, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.SwingAWT.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.SwingAWT.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Text, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Text.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Text.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Util, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.Util.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.Util.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.XML.API, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.OpenJDK.XML.API.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.OpenJDK.XML.API.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.Runtime, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.Runtime.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.Runtime.JNI, Version=7.2.4630.5, Culture=neutral, PublicKeyToken=13235d27fcbfff58, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\IKVM.Runtime.JNI.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\IKVM.Runtime.JNI.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
@@ -158,7 +158,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="zsync-core-0.1.0-SNAPSHOT-jar-with-dependencies, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BSUSync.0.0.41\lib\net452\zsync-core-0.1.0-SNAPSHOT-jar-with-dependencies.dll</HintPath>
+      <HintPath>..\packages\BSUSync.0.0.50\lib\net452\zsync-core-0.1.0-SNAPSHOT-jar-with-dependencies.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
