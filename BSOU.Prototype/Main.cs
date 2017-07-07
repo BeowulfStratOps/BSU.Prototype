@@ -6,7 +6,7 @@ using BSU.Sync;
 using System.IO;
 using System.Diagnostics;
 using NLog;
-
+using BSU.Sync.FileTypes.BI;
 
 namespace BSU.Prototype
 {
@@ -211,6 +211,16 @@ namespace BSU.Prototype
                     UserConfig.CopyUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
 
                     Bikey.CopyBiKeys(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
+
+                    // Generate and install Arma3 Launcher preset
+                    Local local = ArmALauncher.ReadLocal();
+                    local = ArmALauncher.UpdateLocal(Program.LoadedServer.GetLoadedMods(), local, Program.LoadedServer.GetLocalPath().FullName);
+                    ArmALauncher.WriteLocal(local);
+
+                    string preset = ArmALauncher.GeneratePreset(Program.LoadedServer.GetLocalPath().FullName,
+                        Program.LoadedServer.GetLoadedMods());
+
+                    ArmALauncher.WritePreset(preset, Program.LoadedServer.GetServerFile().ServerName);
                 }
 
             }).ContinueWith(x =>
