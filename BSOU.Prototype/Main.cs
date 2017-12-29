@@ -16,6 +16,7 @@ namespace BSU.Prototype
         delegate void SetLoadButtonCallback(bool Status);
         delegate void SetSyncButtonCallback(bool Status);
         delegate void SetSyncUrlBoxCallBack(bool Status);
+        delegate void SetProgressLabelsCallback(string text);
 
         public int ProgessValue { get; set; }
 
@@ -84,23 +85,38 @@ namespace BSU.Prototype
             }
         }
 
+        private void SetProgressLabels(string text)
+        {
+            if (progressLabel1.InvokeRequired || progressLabel2.InvokeRequired)
+            {
+                var d = new SetProgressLabelsCallback(SetProgressLabels);
+                Invoke(d, text);
+            }
+            else
+            {
+                progressLabel1.Text = text;
+                progressLabel2.Text = text;
+            }
+        }
+
         private void HandleProgressUpdateEvent(object sender, ProgressUpdateEventArguments arg)
         {
 
-            if (this.appProgress.InvokeRequired)
+            if (this.progress1.InvokeRequired)
             {
                 Server.ProgressUpdateEventHandler d = new Server.ProgressUpdateEventHandler(HandleProgressUpdateEvent);
                 this.Invoke(d, new object[] { sender, arg });
             }
             else
             {
-                this.appProgress.Value = arg.ProgressValue;
+                progress1.Value = arg.ProgressValue;
+                progress2.Value = arg.ProgressValue;
             }
         }
 
         private void HandleFetchProcessUpdateEvent(object sender, ProgressUpdateEventArguments arg)
         {
-            if (this.appProgress.InvokeRequired)
+            if (this.progress1.InvokeRequired)
             {
                 Server.FetchProgressUpdateEventHandler d = new Server.FetchProgressUpdateEventHandler(HandleFetchProcessUpdateEvent);
                 this.Invoke(d, new object[] { sender, arg });
@@ -111,9 +127,58 @@ namespace BSU.Prototype
             }
         }
 
+        private void HandleDownloadProgressEvent(object sender, DownloadProgressEventArgs arg)
+        {
+
+            if (progress1.InvokeRequired || progressLabel1.InvokeRequired)
+            {
+                var d = new Server.DownloadProgressEventHandler(HandleDownloadProgressEvent);
+                Invoke(d, sender, arg);
+            }
+            else
+            {
+                if (arg.BytesTotal == -1)
+                {
+                    progress1.Value = 0;
+                    progressLabel1.Text = "Downloads (0/???)   ???GB remaining";
+                }
+                else
+                {
+                    progress1.Value = arg.BytesTotal == 0 ? 100 : (int)(100 * arg.BytesDonwloaded / arg.BytesTotal);
+                    var remaining = (arg.BytesTotal - arg.BytesDonwloaded) / (1024.0 * 1024 * 1024);
+                    progressLabel1.Text = $"Downloads ({arg.Files}/{arg.FilesTotal})   {remaining:0.00}GB remaining";
+                }
+            }
+        }
+
+        private void HandleUpdateProgressEvent(object sender, DownloadProgressEventArgs arg)
+        {
+
+            if (progress2.InvokeRequired || progressLabel2.InvokeRequired)
+            {
+                var d = new Server.UpdateProgressEventHandler(HandleUpdateProgressEvent);
+                Invoke(d, sender, arg);
+            }
+            else
+            {
+                if (arg.BytesTotal == -1)
+                {
+                    progress2.Value = 0;
+                    progressLabel2.Text = "Updates (0/???)   ???GB remaining";
+                }
+                else
+                {
+                    progress2.Value = arg.BytesTotal == 0 ? 100 : (int) (100 * arg.BytesDonwloaded / arg.BytesTotal);
+                    var remaining = (arg.BytesTotal - arg.BytesDonwloaded) / (1024.0 * 1024 * 1024);
+                    progressLabel2.Text = $"Updates ({arg.Files}/{arg.FilesTotal})   {remaining:0.00}GB remaining";
+                }
+            }
+        }
+
 
         private void load()
         {
+            Server server = new Server();
             bool loaded = false;
             bool ioerror = false;
             Task t = Task.Factory.StartNew(() =>
@@ -122,9 +187,9 @@ namespace BSU.Prototype
                 SetSyncButton(false);
                 SetTextBoxes(false);
                 statusStrip.Text = "Loading Server (procesing your local mods, might be slow)";
+                SetProgressLabels("Loading Server");
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
 
-                Server server = new Server();
                 server.ProgressUpdateEvent += HandleProgressUpdateEvent;
                 server.FetchProgessUpdateEvent += HandleFetchProcessUpdateEvent;
 
@@ -140,6 +205,7 @@ namespace BSU.Prototype
 
             }).ContinueWith(x =>
             {
+                server.ProgressUpdateEvent -= HandleProgressUpdateEvent;
                 if (loaded)
                 {
                     Program.ServerLoadeded = true;
@@ -151,6 +217,7 @@ namespace BSU.Prototype
                     }
                     MessageBox.Show(sb.ToString());
                     statusStrip.Text = "Server Loaded";
+                    SetProgressLabels("Server Loaded");
                     SetLoadButton(true);
                     SetSyncButton(true);
                 }
@@ -181,7 +248,17 @@ namespace BSU.Prototype
 
         private void sync()
         {
-            HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
+            HandleDownloadProgressEvent(null, new DownloadProgressEventArgs
+            {
+                BytesTotal = -1
+            });
+            HandleUpdateProgressEvent(null, new DownloadProgressEventArgs
+            {
+                BytesTotal = -1
+            });
+
+            Program.LoadedServer.DownloadProgressEvent += HandleDownloadProgressEvent;
+            Program.LoadedServer.UpdateProgressEvent += HandleUpdateProgressEvent;
 
             MessageBox.Show("About to fetch mods! This might take a long time.");
             Stopwatch Sw = new Stopwatch();
@@ -192,6 +269,7 @@ namespace BSU.Prototype
                 SetSyncButton(false);
                 Sw.Start();
                 statusStrip.Text = "Fetching changes";
+                SetProgressLabels("Fetching changes");
                 FailedChanges = Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
 
                 /*
@@ -225,11 +303,13 @@ namespace BSU.Prototype
 
             }).ContinueWith(x =>
             {
+
+                Program.LoadedServer.DownloadProgressEvent -= HandleDownloadProgressEvent;
+                Program.LoadedServer.UpdateProgressEvent -= HandleUpdateProgressEvent;
                 Sw.Stop();
                 SetSyncButton(true);
                 SetTextBoxes(true);
                 SetLoadButton(true);
-                HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 100 });
                 statusStrip.Text = string.Format("Changes fetched in {0}", Sw.Elapsed.ToString());
                 if (FailedChanges > 0)
                 {
