@@ -198,9 +198,10 @@ namespace BSU.Prototype
                 {
                     loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
                     ioerror = true;
+                    logger.Error(e);
                 }
 
             }).ContinueWith(x =>
