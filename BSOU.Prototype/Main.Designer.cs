@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.SyncUrlBox = new System.Windows.Forms.TextBox();
+            this.SyncUrlBox = new System.Windows.Forms.ComboBox();
             this.LocalPathBox = new System.Windows.Forms.TextBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnSync = new System.Windows.Forms.Button();
@@ -54,8 +54,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = Strings.SyncUrl;
-            this.toolTip1.SetToolTip(this.label1, Strings.SyncUrlTooltip);
+            this.label1.Text = "Sync URL";
+            this.toolTip1.SetToolTip(this.label1, global::BSU.Prototype.Strings.SyncUrlTooltip);
             // 
             // label2
             // 
@@ -64,14 +64,18 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = Strings.ModPath;
-            this.toolTip1.SetToolTip(this.label2, Strings.ModPathTooltip);
+            this.label2.Text = "Mod Path";
+            this.toolTip1.SetToolTip(this.label2, global::BSU.Prototype.Strings.ModPathTooltip);
             // 
             // SyncUrlBox
             // 
+            this.SyncUrlBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.SyncUrlBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.SyncUrlBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.SyncUrlBox.Location = new System.Drawing.Point(75, 10);
+            this.SyncUrlBox.MaxDropDownItems = 50;
             this.SyncUrlBox.Name = "SyncUrlBox";
-            this.SyncUrlBox.Size = new System.Drawing.Size(271, 20);
+            this.SyncUrlBox.Size = new System.Drawing.Size(271, 21);
             this.SyncUrlBox.TabIndex = 1;
             this.SyncUrlBox.Leave += new System.EventHandler(this.SyncUrlBox_Leave);
             // 
@@ -89,7 +93,7 @@
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 4;
-            this.btnLoad.Text = Strings.LoadRepo;
+            this.btnLoad.Text = global::BSU.Prototype.Strings.LoadRepo;
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
@@ -100,7 +104,7 @@
             this.btnSync.Name = "btnSync";
             this.btnSync.Size = new System.Drawing.Size(75, 23);
             this.btnSync.TabIndex = 5;
-            this.btnSync.Text = Strings.Sync;
+            this.btnSync.Text = global::BSU.Prototype.Strings.Sync;
             this.btnSync.UseVisualStyleBackColor = true;
             this.btnSync.Click += new System.EventHandler(this.btnSync_Click);
             // 
@@ -128,7 +132,7 @@
             this.btnDirectorySelect.Name = "btnDirectorySelect";
             this.btnDirectorySelect.Size = new System.Drawing.Size(85, 23);
             this.btnDirectorySelect.TabIndex = 3;
-            this.btnDirectorySelect.Text = Strings.SelectFolder;
+            this.btnDirectorySelect.Text = global::BSU.Prototype.Strings.SelectFolder;
             this.btnDirectorySelect.UseVisualStyleBackColor = true;
             this.btnDirectorySelect.Click += new System.EventHandler(this.btnDirectorySelect_Click);
             // 
@@ -199,7 +203,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox SyncUrlBox;
+        private System.Windows.Forms.ComboBox SyncUrlBox;
         private System.Windows.Forms.TextBox LocalPathBox;
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Button btnSync;

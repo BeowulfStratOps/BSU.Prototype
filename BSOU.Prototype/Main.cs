@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BSU.Sync;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 using NLog;
 using BSU.Sync.FileTypes.BI;
 using NLog.Targets;
@@ -100,6 +102,37 @@ namespace BSU.Prototype
             }
         }
 
+        private string GetSyncUrl()
+        {
+            var syncUrl = string.Empty;
+            if (SyncUrlBox.InvokeRequired)
+            {
+                SyncUrlBox.Invoke(new MethodInvoker(delegate { syncUrl = SyncUrlBox.Text; }));
+
+            }
+            else
+            {
+                syncUrl = SyncUrlBox.Text;
+            }
+
+            return syncUrl;
+        }
+
+        private string GetLocalPath()
+        {
+            var localPath = string.Empty;
+            if (LocalPathBox.InvokeRequired)
+            {
+                LocalPathBox.Invoke(new MethodInvoker(delegate { localPath = LocalPathBox.Text; }));
+            }
+            else
+            {
+                localPath = LocalPathBox.Text;
+            }
+
+            return localPath;
+        }
+
         private void HandleProgressUpdateEvent(object sender, ProgressUpdateEventArguments arg)
         {
 
@@ -189,7 +222,7 @@ namespace BSU.Prototype
                 SetTextBoxes(false);
                 statusStrip.Text = Strings.LoadingServerStatus;
                 SetProgressLabels(Strings.LoadingServer);
-                Uri SyncUri = new Uri(SyncUrlBox.Text);
+                Uri SyncUri = new Uri(GetSyncUrl());
 
                 server.ProgressUpdateEvent += HandleProgressUpdateEvent;
                 server.FetchProgessUpdateEvent += HandleFetchProcessUpdateEvent;
@@ -197,7 +230,7 @@ namespace BSU.Prototype
                 Program.LoadedServer = server;
                 try
                 {
-                    loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(LocalPathBox.Text));
+                    loaded = Program.LoadedServer.LoadFromWeb(SyncUri, new DirectoryInfo(GetLocalPath()));
                 }
                 catch (IOException e)
                 {
@@ -338,13 +371,40 @@ namespace BSU.Prototype
         private void Main_Load(object sender, EventArgs e)
         {
             this.Text = String.Format(Strings.ProgramTitle, Application.ProductVersion);
-            SyncUrlBox.Text = PersistentSettings.GetLastSyncUrl();
+            var persistentSyncUrls = PersistentSettings.GetSyncUrls();
+            if (persistentSyncUrls != null)
+            {
+                foreach (var item in persistentSyncUrls)
+                {
+                    SyncUrlBox.Items.Add(item);
+                }
+
+                SyncUrlBox.SelectedIndex = PersistentSettings.GetUrlsSelectedIndex();
+            }
+            else
+            {
+                // If its null, we might have an old style one 
+                var oldStyleUrl = PersistentSettings.GetLastSyncUrlOldStyle();
+                if (oldStyleUrl != null)
+                {
+                    SyncUrlBox.Items.Add(oldStyleUrl);
+                    SyncUrlBox.SelectedIndex = 0;
+                }
+            }
             LocalPathBox.Text = PersistentSettings.GetLastModFolder();
         }
 
         private void SyncUrlBox_Leave(object sender, EventArgs e)
         {
-            PersistentSettings.SetLastSyncUrl(SyncUrlBox.Text);
+            if (!SyncUrlBox.Items.Contains(SyncUrlBox.Text))
+            {
+                SyncUrlBox.Items.Add(SyncUrlBox.Text);
+                SyncUrlBox.SelectedIndex = SyncUrlBox.FindStringExact(SyncUrlBox.Text);
+            }
+
+            var values = this.SyncUrlBox.Items.OfType<string>().ToList();
+            PersistentSettings.SetSyncUrls(values);
+            PersistentSettings.SetUrlSelectedIndex(SyncUrlBox.SelectedIndex);
         }
 
         private void LocalPathBox_Leave(object sender, EventArgs e)
@@ -369,8 +429,8 @@ namespace BSU.Prototype
         {
             if (keyData != (Keys.L | Keys.Alt)) return base.ProcessCmdKey(ref msg, keyData);
 
-            var fileTarget = (FileTarget)LogManager.Configuration.FindTargetByName("f");
-            var logEventInfo = new LogEventInfo { TimeStamp = DateTime.Now };
+            var fileTarget = (FileTarget) LogManager.Configuration.FindTargetByName("f");
+            var logEventInfo = new LogEventInfo {TimeStamp = DateTime.Now};
             var folder = Path.GetDirectoryName(fileTarget.FileName.Render(logEventInfo));
 
             Process.Start(new ProcessStartInfo

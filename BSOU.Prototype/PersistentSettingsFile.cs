@@ -10,10 +10,10 @@ namespace BSU.Prototype
     [JsonObject("PersistentSettings")]
     public class PersistentSettingsFile
     {
-        public PersistentSettingsFile(string ModPath, string SyncUrl)
+        public PersistentSettingsFile(string ModPath, List<string> syncUrls)
         {
             this.ModPath = ModPath;
-            this.SyncUrl = SyncUrl;
+            this.SyncUrls = syncUrls;
         }
         /// <summary>
         /// 
@@ -25,5 +25,12 @@ namespace BSU.Prototype
         /// </summary>
         [JsonProperty]
         public string SyncUrl { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonProperty]
+        public List<string> SyncUrls { get; set; }
+        [JsonProperty]
+        public int SelectedUrl { get; set; }
     }
 }

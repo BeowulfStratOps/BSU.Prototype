@@ -31,10 +31,23 @@ namespace BSU.Prototype
             return persistentFile.ModPath;
         }
         /// <summary>
-        /// Gets the last saved (if any) sync url
+        /// Gets the saved (if any) sync urls
         /// </summary>
         /// <returns></returns>
-        internal static string GetLastSyncUrl()
+        internal static List<string> GetSyncUrls()
+        {
+            if (!PersistentFileExists())
+            {
+                return new List<string>();
+            }
+            PersistentSettingsFile persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json")));
+            return persistentFile.SyncUrls;
+        }
+        /// <summary>
+        /// Gets the old style sync URL if any
+        /// </summary>
+        /// <returns></returns>
+        internal static string GetLastSyncUrlOldStyle()
         {
             if (!PersistentFileExists())
             {
@@ -62,7 +75,7 @@ namespace BSU.Prototype
             }
             else
             {
-                persistentFile = new PersistentSettingsFile(str, string.Empty);
+                persistentFile = new PersistentSettingsFile(str, new List<string>());
             }
             persistentFile.ModPath = str;
             File.WriteAllText(Path.Combine(DataFolder.FullName, "data.json"),JsonConvert.SerializeObject(persistentFile));
@@ -72,26 +85,54 @@ namespace BSU.Prototype
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="str"></param>
-        internal static void SetLastSyncUrl(string str)
+        /// <param name="urls">List of URLs</param>
+        internal static void SetSyncUrls(List<string> urls)
         {
             PersistentSettingsFile persistentFile;
             if (PersistentFileExists())
             {
                 string json = File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json"));
                 persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(json);
-                if (persistentFile.SyncUrl == str)
+            }
+            else
+            {
+                persistentFile = new PersistentSettingsFile(string.Empty, urls);
+            }
+            persistentFile.SyncUrls = urls;
+            File.WriteAllText(Path.Combine(DataFolder.FullName, "data.json"), JsonConvert.SerializeObject(persistentFile));
+        }
+
+        internal static int GetUrlsSelectedIndex()
+        {
+            if (!PersistentFileExists())
+            {
+                return 0;
+            }
+            PersistentSettingsFile persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json")));
+            return persistentFile.SelectedUrl;
+        }
+
+        internal static void SetUrlSelectedIndex(int index)
+        {
+            PersistentSettingsFile persistentFile;
+            if (PersistentFileExists())
+            {
+                string json = File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json"));
+                persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(json);
+                if (persistentFile.SelectedUrl == index)
                 {
                     return;
                 }
             }
             else
             {
-                persistentFile = new PersistentSettingsFile(string.Empty, str);
+                persistentFile = new PersistentSettingsFile(string.Empty, new List<string>());
             }
-            persistentFile.SyncUrl = str;
+
+            persistentFile.SelectedUrl = index;
             File.WriteAllText(Path.Combine(DataFolder.FullName, "data.json"), JsonConvert.SerializeObject(persistentFile));
         }
+
         private static bool PersistentFileExists()
         {
             
