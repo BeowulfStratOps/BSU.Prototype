@@ -7,6 +7,7 @@ using System.IO;
 using System.Diagnostics;
 using NLog;
 using BSU.Sync.FileTypes.BI;
+using NLog.Targets;
 
 namespace BSU.Prototype
 {
@@ -362,6 +363,23 @@ namespace BSU.Prototype
             fbd.ShowDialog();
             LocalPathBox.Text = fbd.SelectedPath;
             PersistentSettings.SetLastModFolder(LocalPathBox.Text);
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData != (Keys.L | Keys.Alt)) return base.ProcessCmdKey(ref msg, keyData);
+
+            var fileTarget = (FileTarget)LogManager.Configuration.FindTargetByName("f");
+            var logEventInfo = new LogEventInfo { TimeStamp = DateTime.Now };
+            var folder = Path.GetDirectoryName(fileTarget.FileName.Render(logEventInfo));
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = folder ?? Application.StartupPath,
+                UseShellExecute = true,
+                Verb = "Open"
+            });
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
