@@ -54,8 +54,8 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Sync URL";
-            this.toolTip1.SetToolTip(this.label1, "Server sync file, check the wiki");
+            this.label1.Text = Strings.SyncUrl;
+            this.toolTip1.SetToolTip(this.label1, Strings.SyncUrlTooltip);
             // 
             // label2
             // 
@@ -64,8 +64,8 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Mod Path";
-            this.toolTip1.SetToolTip(this.label2, "The place where you wish to install your mods.");
+            this.label2.Text = Strings.ModPath;
+            this.toolTip1.SetToolTip(this.label2, Strings.ModPathTooltip);
             // 
             // SyncUrlBox
             // 
@@ -89,7 +89,7 @@
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 4;
-            this.btnLoad.Text = "Load Repo";
+            this.btnLoad.Text = Strings.LoadRepo;
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
@@ -100,7 +100,7 @@
             this.btnSync.Name = "btnSync";
             this.btnSync.Size = new System.Drawing.Size(75, 23);
             this.btnSync.TabIndex = 5;
-            this.btnSync.Text = "Sync";
+            this.btnSync.Text = Strings.Sync;
             this.btnSync.UseVisualStyleBackColor = true;
             this.btnSync.Click += new System.EventHandler(this.btnSync_Click);
             // 
@@ -128,7 +128,7 @@
             this.btnDirectorySelect.Name = "btnDirectorySelect";
             this.btnDirectorySelect.Size = new System.Drawing.Size(85, 23);
             this.btnDirectorySelect.TabIndex = 3;
-            this.btnDirectorySelect.Text = "Select Folder";
+            this.btnDirectorySelect.Text = Strings.SelectFolder;
             this.btnDirectorySelect.UseVisualStyleBackColor = true;
             this.btnDirectorySelect.Click += new System.EventHandler(this.btnDirectorySelect_Click);
             // 

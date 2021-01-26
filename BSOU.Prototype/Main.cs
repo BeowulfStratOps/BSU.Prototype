@@ -124,7 +124,7 @@ namespace BSU.Prototype
             }
             else
             {
-                this.statusStrip.Text = $"Fetching changes ({arg.ProgressValue}/{arg.MaximumValue})...";
+                this.statusStrip.Text = string.Format(Strings.FetchingChanges, arg.ProgressValue, arg.MaximumValue);
             }
         }
 
@@ -141,13 +141,13 @@ namespace BSU.Prototype
                 if (arg.BytesTotal == -1)
                 {
                     progress1.Value = 0;
-                    progressLabel1.Text = "Downloads (0/???)   ???GB remaining";
+                    progressLabel1.Text = Strings.DownloadsRemianingFallback;
                 }
                 else
                 {
                     progress1.Value = arg.BytesTotal == 0 ? 100 : (int)(100 * arg.BytesDonwloaded / arg.BytesTotal);
                     var remaining = (arg.BytesTotal - arg.BytesDonwloaded) / (1024.0 * 1024 * 1024);
-                    progressLabel1.Text = $"Downloads ({arg.Files}/{arg.FilesTotal})   {remaining:0.00}GB remaining";
+                    progressLabel1.Text = string.Format(Strings.DownloadsRemaining, arg.Files, arg.FilesTotal, remaining);
                 }
             }
         }
@@ -165,13 +165,13 @@ namespace BSU.Prototype
                 if (arg.BytesTotal == -1)
                 {
                     progress2.Value = 0;
-                    progressLabel2.Text = "Updates (0/???)   ???GB remaining";
+                    progressLabel2.Text = Strings.UpdatesRemainingFallback;
                 }
                 else
                 {
                     progress2.Value = arg.BytesTotal == 0 ? 100 : (int) (100 * arg.BytesDonwloaded / arg.BytesTotal);
                     var remaining = (arg.BytesTotal - arg.BytesDonwloaded) / (1024.0 * 1024 * 1024);
-                    progressLabel2.Text = $"Updates ({arg.Files}/{arg.FilesTotal})   {remaining:0.00}GB remaining";
+                    progressLabel2.Text = string.Format(Strings.UpdatesRemaining, arg.Files, arg.FilesTotal, remaining);
                 }
             }
         }
@@ -187,8 +187,8 @@ namespace BSU.Prototype
                 SetLoadButton(false);
                 SetSyncButton(false);
                 SetTextBoxes(false);
-                statusStrip.Text = "Loading Server (procesing your local mods, might be slow)";
-                SetProgressLabels("Loading Server");
+                statusStrip.Text = Strings.LoadingServerStatus;
+                SetProgressLabels(Strings.LoadingServer);
                 Uri SyncUri = new Uri(SyncUrlBox.Text);
 
                 server.ProgressUpdateEvent += HandleProgressUpdateEvent;
@@ -212,32 +212,32 @@ namespace BSU.Prototype
                 {
                     Program.ServerLoadeded = true;
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendLine("Remote Mods Fetched: ");
+                    sb.AppendLine(Strings.RemoteModsFetched);
                     foreach (ModFolder m in Program.LoadedServer.GetLoadedMods())
                     {
                         sb.AppendFormat("\t {0} \n", m.ModName);
                     }
                     MessageBox.Show(sb.ToString());
-                    statusStrip.Text = "Server Loaded";
-                    SetProgressLabels("Server Loaded");
+                    statusStrip.Text = Strings.ServerLoaded;
+                    SetProgressLabels(Strings.ServerLoaded);
                     SetLoadButton(true);
                     SetSyncButton(true);
                 }
                 else if (!ioerror)
                 {
-                    MessageBox.Show("Failed to load server file. Check the URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Strings.FailedToLoadServerFile, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     SetLoadButton(true);
                     SetTextBoxes(true);
                     HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
-                    statusStrip.Text = "Failed to load due to bad URL";
+                    statusStrip.Text = Strings.FailedToLoadDueToBadUrl;
                     logger.Error($"Failed to load config file {SyncUrlBox.Text}");
                 } else if (ioerror)
                 {
-                    MessageBox.Show("Failed to hash local files. Check they are not in use and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(Strings.FailedToHashLocalFiles, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     SetLoadButton(true);
                     SetTextBoxes(true);
                     HandleProgressUpdateEvent(null, new ProgressUpdateEventArguments() { ProgressValue = 0 });
-                    statusStrip.Text = "Failed to load due to IO Error";
+                    statusStrip.Text = Strings.FailedToLoadDueToIOError;
                     logger.Error("Failed to load config file due to IO error (File in use?)");
                 }
             });
@@ -262,7 +262,7 @@ namespace BSU.Prototype
             Program.LoadedServer.DownloadProgressEvent += HandleDownloadProgressEvent;
             Program.LoadedServer.UpdateProgressEvent += HandleUpdateProgressEvent;
 
-            MessageBox.Show("About to fetch mods! This might take a long time.");
+            MessageBox.Show(Strings.AboutToFetchMods);
             Stopwatch Sw = new Stopwatch();
             Task t = Task.Factory.StartNew(() =>
             {
@@ -270,8 +270,8 @@ namespace BSU.Prototype
                 SetLoadButton(false);
                 SetSyncButton(false);
                 Sw.Start();
-                statusStrip.Text = "Fetching changes";
-                SetProgressLabels("Fetching changes");
+                statusStrip.Text = Strings.FetchingChangesStatus;
+                SetProgressLabels(Strings.FetchingChangesStatus);
                 FailedChanges = Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
 
                 /*
@@ -312,14 +312,14 @@ namespace BSU.Prototype
                 SetSyncButton(true);
                 SetTextBoxes(true);
                 SetLoadButton(true);
-                statusStrip.Text = string.Format("Changes fetched in {0}", Sw.Elapsed.ToString());
+                statusStrip.Text = string.Format(Strings.ChangesFetchedIn, Sw.Elapsed.ToString());
                 if (FailedChanges > 0)
                 {
                     if (
                         MessageBox.Show(
                             string.Format(
-                                "Failed to acquire {0} changes. Your mods are not up to date as a result. \r\nYou must re-sync to be up to date. Ensure you are connected to the internet.",
-                                FailedChanges), "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) ==
+                                Strings.FailedToAcquire,
+                                FailedChanges), Strings.Error, MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) ==
                         DialogResult.Retry)
                     {
                         load();
@@ -327,7 +327,7 @@ namespace BSU.Prototype
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Fetched mods in {0}", Sw.Elapsed.ToString()));
+                    MessageBox.Show(string.Format(Strings.FetchedModsIn, Sw.Elapsed.ToString()));
                 }
             });
         }
@@ -337,7 +337,7 @@ namespace BSU.Prototype
         }
         private void Main_Load(object sender, EventArgs e)
         {
-            this.Text = String.Format("Beowulf Sync Prototype {0}", Application.ProductVersion);
+            this.Text = String.Format(Strings.ProgramTitle, Application.ProductVersion);
             SyncUrlBox.Text = PersistentSettings.GetLastSyncUrl();
             LocalPathBox.Text = PersistentSettings.GetLastModFolder();
         }
@@ -359,7 +359,7 @@ namespace BSU.Prototype
             {
                 fbd.SelectedPath = LocalPathBox.Text;
             }
-            fbd.Description = "Select where you wish to install the mods to";
+            fbd.Description = Strings.SelectModInstallLocation;
             fbd.ShowDialog();
             LocalPathBox.Text = fbd.SelectedPath;
             PersistentSettings.SetLastModFolder(LocalPathBox.Text);
