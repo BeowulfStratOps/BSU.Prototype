@@ -1,0 +1,99 @@
+﻿<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutToFetchMods" xml:space="preserve">
+    <value>About to fetch mods! This might take a long time.</value>
+  </data>
+  <data name="ChangesFetchedIn" xml:space="preserve">
+    <value>Changes fetched in {0}</value>
+  </data>
+  <data name="DownloadsRemaining" xml:space="preserve">
+    <value>Downloads ({0}/{1})   {2:0.00}GB remaining</value>
+  </data>
+  <data name="DownloadsRemianingFallback" xml:space="preserve">
+    <value>Downloads (0/???)   ???GB remaining</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="FailedToAcquire" xml:space="preserve">
+    <value>Failed to acquire {0} changes. Your mods are not up to date as a result. 
+You must re-sync to be up to date. Ensure you are connected to the internet.</value>
+  </data>
+  <data name="FailedToHashLocalFiles" xml:space="preserve">
+    <value>Failed to hash local files. Check they are not in use and try again.</value>
+  </data>
+  <data name="FailedToLoadDueToBadUrl" xml:space="preserve">
+    <value>Failed to load due to bad URL</value>
+  </data>
+  <data name="FailedToLoadDueToIOError" xml:space="preserve">
+    <value>Failed to load due to IO Error</value>
+  </data>
+  <data name="FailedToLoadServerFile" xml:space="preserve">
+    <value>Failed to load server file. Check the URL and try again.</value>
+  </data>
+  <data name="FetchedModsIn" xml:space="preserve">
+    <value>Fetched mods in {0}</value>
+  </data>
+  <data name="FetchingChanges" xml:space="preserve">
+    <value>Fetching changes ({0}/{1})...</value>
+  </data>
+  <data name="FetchingChangesStatus" xml:space="preserve">
+    <value>Fetching changes</value>
+  </data>
+  <data name="LoadingServer" xml:space="preserve">
+    <value>Loading Server</value>
+  </data>
+  <data name="LoadingServerStatus" xml:space="preserve">
+    <value>Loading Server (procesing your local mods, might be slow)</value>
+  </data>
+  <data name="LoadRepo" xml:space="preserve">
+    <value>Load Repo</value>
+  </data>
+  <data name="ModPath" xml:space="preserve">
+    <value>Mod Path</value>
+  </data>
+  <data name="ModPathTooltip" xml:space="preserve">
+    <value>The place where you wish to install your mods.</value>
+  </data>
+  <data name="ProgramTitle" xml:space="preserve">
+    <value>Beowulf Sync Prototype {0}</value>
+  </data>
+  <data name="RemoteModsFetched" xml:space="preserve">
+    <value>Remote Mods Fetched:</value>
+  </data>
+  <data name="SelectFolder" xml:space="preserve">
+    <value>Select Folder</value>
+  </data>
+  <data name="SelectModInstallLocation" xml:space="preserve">
+    <value>Select where you wish to install the mods to</value>
+  </data>
+  <data name="ServerLoaded" xml:space="preserve">
+    <value>Server Loaded</value>
+  </data>
+  <data name="Sync" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="SyncUrl" xml:space="preserve">
+    <value>Sync URL</value>
+  </data>
+  <data name="SyncUrlTooltip" xml:space="preserve">
+    <value>Server sync file, check the wiki</value>
+  </data>
+  <data name="UpdatesRemaining" xml:space="preserve">
+    <value>Updates ({0}/{1})   {2:0.00}GB remaining</value>
+  </data>
+  <data name="UpdatesRemainingFallback" xml:space="preserve">
+    <value>Updates (0/???)   ???GB remaining</value>
+  </data>
+</root>
