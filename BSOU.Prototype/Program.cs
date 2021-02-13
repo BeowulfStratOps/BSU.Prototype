@@ -47,12 +47,8 @@ namespace BSU.Prototype
                                 await mgr.DownloadReleases(updates.ReleasesToApply);
                                 await mgr.ApplyReleases(updates);
 
-
-                                string latestExe =
-                                    $"\"{Path.Combine(await mgr.ApplyReleases(updates), "BSU.Prototype.exe")}\"";
-
                                 logger.Info($"Update applied, restarting");
-                                UpdateManager.RestartApp(latestExe);
+                                UpdateManager.RestartApp();
                             }
 
                         })
