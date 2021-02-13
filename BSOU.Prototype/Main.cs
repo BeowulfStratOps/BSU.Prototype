@@ -323,7 +323,16 @@ namespace BSU.Prototype
                     //var UserConfigs = UserConfig.GetModFoldersWithUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath().ToString());
                     UserConfig.CopyUserConfigs(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
 
-                    Bikey.CopyBiKeys(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
+
+                    try
+                    {
+                        Bikey.CopyBiKeys(Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.GetLocalPath());
+                    }
+                    catch (IOException ex)
+                    {
+                        // Just log, we don't care
+                        logger.Warn(ex);
+                    }
 
                     // Generate and install Arma3 Launcher preset
                     Local local = ArmALauncher.ReadLocal();
