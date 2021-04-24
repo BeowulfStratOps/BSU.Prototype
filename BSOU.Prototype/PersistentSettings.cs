@@ -106,7 +106,8 @@ namespace BSU.Prototype
         {
             if (!PersistentFileExists())
             {
-                return 0;
+                // -1 is a valid default option for the combobox, 0 is not 
+                return -1;
             }
             PersistentSettingsFile persistentFile = JsonConvert.DeserializeObject<PersistentSettingsFile>(File.ReadAllText(Path.Combine(DataFolder.FullName, "data.json")));
             return persistentFile.SelectedUrl;
