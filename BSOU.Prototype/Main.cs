@@ -281,7 +281,7 @@ namespace BSU.Prototype
 
         }
 
-        private void sync()
+        private void sync(bool saveChangeList)
         {
             HandleDownloadProgressEvent(null, new DownloadProgressEventArgs
             {
@@ -305,7 +305,7 @@ namespace BSU.Prototype
                 Sw.Start();
                 statusStrip.Text = Strings.FetchingChangesStatus;
                 SetProgressLabels(Strings.FetchingChangesStatus);
-                FailedChanges = Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()));
+                FailedChanges = Program.LoadedServer.FetchChanges(Program.LoadedServer.GetLocalPath(), Remote.GetModFolderHashes(Program.LoadedServer.GetServerFileUri()),saveChangeList);
 
                 /*
                 No longer needed due to TS 3.1 
@@ -316,6 +316,7 @@ namespace BSU.Prototype
                     TeamSpeak.FindAndCopyTeamSpeakPlugin(TeamSpeakPlugins, Program.LoadedServer.GetLocalPath(), new DirectoryInfo(TeamSpeakPlugin.TeamSpeakPath()));
                 }
                 */
+                
                 // Do the same with user configs
                 if (ArmA.IsInstalled())
                 {
@@ -375,7 +376,8 @@ namespace BSU.Prototype
         }
         private void btnSync_Click(object sender, EventArgs e)
         {
-            sync();
+            var saveChangeList = Control.ModifierKeys == Keys.Control;
+            sync(saveChangeList);
         }
         private void Main_Load(object sender, EventArgs e)
         {
