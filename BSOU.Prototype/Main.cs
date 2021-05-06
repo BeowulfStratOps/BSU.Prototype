@@ -341,7 +341,7 @@ namespace BSU.Prototype
                     ArmALauncher.WriteLocal(local);
 
                     string preset = ArmALauncher.GeneratePreset(Program.LoadedServer.GetLocalPath().FullName,
-                        Program.LoadedServer.GetLoadedMods());
+                        Program.LoadedServer.GetLoadedMods(), Program.LoadedServer.Dlcs);
 
                     ArmALauncher.WritePreset(preset, Program.LoadedServer.GetServerFile().ServerName);
                 }
