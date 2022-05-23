@@ -403,6 +403,16 @@ namespace BSU.Prototype
                 }
             }
             LocalPathBox.Text = PersistentSettings.GetLastModFolder();
+
+            var msg = MessageBox.Show(
+                "This prototype version of BSU is deprecated. Please use the shiny new BSU from https://beowulfstratops.github.io/BSU/  .\n\nOpen website now?",
+                "Use new BSU!", MessageBoxButtons.YesNo);
+            if (msg == DialogResult.Yes)
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://beowulfstratops.github.io/BSU/",
+                    UseShellExecute = true
+                });
         }
 
         private void SyncUrlBox_Leave(object sender, EventArgs e)
